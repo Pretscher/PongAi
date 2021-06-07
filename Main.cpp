@@ -110,10 +110,10 @@ void trainAI(int ai) {
         if (train == true) {//punish if enemy scored
             float* targets = new float[1];
             if (bats[ai]->getY() > ball->getY()) {
-                targets[0] = ((ball->getY() - bats[ai]->getH() / 2) + 1.0f) / 2;
+                targets[0] = ((ball->getY() - bats[0]->getH() / 2 + ball->getR() * 2) + 1.0f) / 2.0f;//(x + 1) / 2 is formula for generating input for nn
             }
             else {
-                targets[0] = ((ball->getY() - bats[ai]->getH() / 2) + 1.0f) / 2;
+                targets[0] = ((ball->getY() - bats[1]->getH() / 2 + ball->getR() * 2) + 1.0f) / 2.0f;
             }
             canTrain[ai] = false;
 
@@ -142,9 +142,9 @@ void AIgameLoop() {
     }
 
 
-    input[0] = (ball->getX() + 1.0f) / 2;
-    input[1] = (ball->getY() + 1.0f) / 2;
-    input[2] = (bats[0]->getX() + 1.0f) / 2;
+    input[0] = (ball->getX() + ball->getR() + 1.0f) / 2;
+    input[1] = (ball->getY() - ball->getR() + 1.0f) / 2;
+    input[2] = (bats[0]->getX() + bats[0]->getW() + 1.0f) / 2;
     input[3] = (bats[0]->getY() + 1.0f) / 2;
     input[4] = ball->getXmotion();
     input[5] = ball->getYmotion();
@@ -182,7 +182,7 @@ void basicGameLoop() {
     if (ball->getX() < 0.8f - (ball->getR() * 2)) bats[1]->setCollisionPossible(true);
     ball->collision(bats[0]);
     ball->collision(bats[1]);
-
+    //only train once per loss
     if (canTrain[0] == false || canTrain[1] == false) {
         if (ball->getX() > 1.1f || ball->getX() < -1.1f + ball->getR() * 2) {
             ball->setX(0.0f);
