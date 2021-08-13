@@ -68,7 +68,6 @@ void Renderer::drawLine(float x1, float y1, float x2, float y2) {
     };
 
     Renderer::currentWindow->draw(line, 2, sf::Lines);
-    delete[] line;
 }
 
 //Coordinate System Math----------------------------------------------------------------------------------------
